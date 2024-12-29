@@ -1,2 +1,7 @@
 langchain_community
 PyPDF
+langchain_huggingface
+langchain_groq
+streamlit
+langchain_chroma
+sentence-transformers
