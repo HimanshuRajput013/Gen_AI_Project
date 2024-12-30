@@ -14,9 +14,8 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 import os
-import chromadb.api.client
+from chromadb.api.client import SharedSystemClient
 
-chromadb.api.client.SharedSystemClient.clear_system_cache()
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -49,7 +48,7 @@ if api_key:
     if uploaded_files:
         documents=[]
         for uploaded_file in uploaded_files:
-            temppdf=f"./temp_pdf.pdf"
+            temppdf=f"./temppdf.pdf"
             with open(temppdf,"wb") as file:
                 file.write(uploaded_file.getvalue())
                 file_name=uploaded_file.name
@@ -57,8 +56,8 @@ if api_key:
             loader=PyPDFLoader(temppdf)
             docs=loader.load()
             documents.extend(docs)
-
-        from chromadb.api.client import SharedSystemClient
+            
+        
         SharedSystemClient.clear_system_cache()
 
     # Split and create embeddings for the documents
