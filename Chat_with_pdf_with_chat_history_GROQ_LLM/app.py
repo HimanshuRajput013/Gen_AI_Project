@@ -1,10 +1,10 @@
 ## RAG Q&A Conversation With PDF Including Chat History
 import streamlit as st
 #from langchain.chains import create_history_aware_retriever, create_retrieval_chain
-from langchain.chains import history_aware_retriever as create_history_aware_retriever
-from langchain.chains import retrieval as create_retrieval_chain
+from langchain.chains.history_aware_retriever import create_history_aware_retriever
+from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -14,6 +14,9 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 import os
+import chromadb.api.client
+
+chromadb.api.client.SharedSystemClient.clear_system_cache()
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -46,7 +49,7 @@ if api_key:
     if uploaded_files:
         documents=[]
         for uploaded_file in uploaded_files:
-            temppdf=f"./temp.pdf"
+            temppdf=f"./temp_pdf.pdf"
             with open(temppdf,"wb") as file:
                 file.write(uploaded_file.getvalue())
                 file_name=uploaded_file.name
@@ -54,6 +57,9 @@ if api_key:
             loader=PyPDFLoader(temppdf)
             docs=loader.load()
             documents.extend(docs)
+
+        from chromadb.api.client import SharedSystemClient
+        SharedSystemClient.clear_system_cache()
 
     # Split and create embeddings for the documents
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=500)
