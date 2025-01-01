@@ -80,21 +80,6 @@ for msg in st.session_state.messages:
 ## LEts start the interaction
 question=st.text_area("Enter youe question:","I have 5 bananas and 7 grapes. I eat 2 bananas and give away 3 grapes. Then I buy a dozen apples and 2 packs of blueberries. Each pack of blueberries contains 25 berries. How many total pieces of fruit do I have at the end?")
 
-if st.button("find my answer"):
-    if question:
-        with st.spinner("Generate response.."):
-            st.session_state.messages.append({"role":"user","content":question})
-            st.chat_message("user").write(question)
-
-            st_cb=StreamlitCallbackHandler(st.container(),expand_new_thoughts=False)
-            response=assistant_agent.run(st.session_state.messages,callbacks=[st_cb]
-                                         )
-            st.session_state.messages.append({'role':'assistant',"content":response})
-            st.write('### Response:')
-            st.success(response)
-
-    else:
-        st.warning("Please enter the question")
 
 
 
